@@ -26,11 +26,7 @@ func New(config Config) *App {
 
 	app.loadRoutes()
 
-	middlewares := Chain(
-		middleware.Logger,
-	)
-
-	app.router = middlewares(app.router)
+	app.loadMiddleware(middleware.Logging)
 
 	return app
 }

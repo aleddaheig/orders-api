@@ -6,12 +6,9 @@ import (
 
 type Middleware func(http.Handler) http.Handler
 
-func Chain(middleware ...Middleware) Middleware {
-	return func(next http.Handler) http.Handler {
-		for _, m := range middleware {
-			next = m(next)
-		}
-
-		return next
-	}
+func (app *App) loadMiddleware(middlewares ...Middleware) {
+    // Apply middlewares in reverse to maintain execution order
+    for i := len(middlewares) - 1; i >= 0; i-- {
+        app.router = middlewares[i](app.router)
+    }
 }
