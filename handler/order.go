@@ -11,7 +11,6 @@ import (
 
 	"github.com/aleddaheig/orders-api/model"
 	"github.com/aleddaheig/orders-api/repository/order"
-	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 )
 
@@ -53,8 +52,8 @@ func (h *Order) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write(res)
 	w.WriteHeader(http.StatusCreated)
+	w.Write(res)
 }
 
 func (h *Order) List(w http.ResponseWriter, r *http.Request) {
@@ -101,7 +100,7 @@ func (h *Order) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Order) GetByID(w http.ResponseWriter, r *http.Request) {
-	idParam := chi.URLParam(r, "id")
+	idParam := r.PathValue("id")
 
 	const base = 10
 	const bitSize = 64
@@ -139,7 +138,7 @@ func (h *Order) UpdateByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	idParam := chi.URLParam(r, "id")
+	idParam := r.PathValue("id")
 
 	const base = 10
 	const bitSize = 64
@@ -198,7 +197,7 @@ func (h *Order) UpdateByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Order) DeleteByID(w http.ResponseWriter, r *http.Request) {
-	idParam := chi.URLParam(r, "id")
+	idParam := r.PathValue("id")
 
 	const base = 10
 	const bitSize = 64

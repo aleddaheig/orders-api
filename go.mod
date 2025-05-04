@@ -1,9 +1,8 @@
 module github.com/aleddaheig/orders-api
 
-go 1.20
+go 1.24.2
 
 require (
-	github.com/go-chi/chi/v5 v5.0.8
 	github.com/google/uuid v1.3.0
 	github.com/redis/go-redis/v9 v9.0.5
 )

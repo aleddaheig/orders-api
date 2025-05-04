@@ -3,37 +3,32 @@ package application
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-
 	"github.com/aleddaheig/orders-api/handler"
 	"github.com/aleddaheig/orders-api/repository/order"
 )
 
 func (a *App) loadRoutes() {
-	router := chi.NewRouter()
+	router := http.NewServeMux()
 
-	router.Use(middleware.Logger)
-
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	router.Route("/orders", a.loadOrderRoutes)
+	a.loadOrderRoutes(router)
 
 	a.router = router
 }
 
-func (a *App) loadOrderRoutes(router chi.Router) {
+func (a *App) loadOrderRoutes(router *http.ServeMux) {
 	orderHandler := &handler.Order{
 		Repo: &order.RedisRepo{
 			Client: a.rdb,
 		},
 	}
 
-	router.Post("/", orderHandler.Create)
-	router.Get("/", orderHandler.List)
-	router.Get("/{id}", orderHandler.GetByID)
-	router.Put("/{id}", orderHandler.UpdateByID)
-	router.Delete("/{id}", orderHandler.DeleteByID)
+	router.HandleFunc("POST /orders", orderHandler.Create)
+	router.HandleFunc("GET /orders", orderHandler.List)
+	router.HandleFunc("GET /orders/{id}", orderHandler.GetByID)
+	router.HandleFunc("PUT /orders/{id}", orderHandler.UpdateByID)
+	router.HandleFunc("DELETE /orders/{id}", orderHandler.DeleteByID)
 }

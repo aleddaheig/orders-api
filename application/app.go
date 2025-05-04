@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/aleddaheig/orders-api/middleware"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -24,6 +25,12 @@ func New(config Config) *App {
 	}
 
 	app.loadRoutes()
+
+	middlewares := Chain(
+		middleware.Logger,
+	)
+
+	app.router = middlewares(app.router)
 
 	return app
 }
